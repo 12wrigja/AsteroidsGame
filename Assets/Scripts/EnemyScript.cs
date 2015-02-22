@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AsteriodGenerator : MonoBehaviour {
+public class EnemyScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
