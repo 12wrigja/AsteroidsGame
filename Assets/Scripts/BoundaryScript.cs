@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class BoundaryScript : MonoBehaviour {
@@ -21,7 +21,7 @@ public class BoundaryScript : MonoBehaviour {
 		else
 		{
 			Debug.Log(other.name + " is out of bounds.");
-			other.transform.position = new Vector2(other.transform.position.x, other.transform.position.y) * -1;
+			other.transform.position = new Vector2(other.transform.position.x, other.transform.position.y) * -0.75f;
 		}
 	}
 }

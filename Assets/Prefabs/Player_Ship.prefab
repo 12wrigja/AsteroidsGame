@@ -153,8 +153,8 @@ Rigidbody2D:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0
+  m_LinearDrag: 5
+  m_AngularDrag: .0500000007
   m_GravityScale: 0
   m_FixedAngle: 0
   m_IsKinematic: 0
@@ -252,10 +252,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57973aa5944362d46bb2c51cfa51f660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 80
+  maxSpeed: 60
   rotationalForce: 2
   fireRate: .150000006
-  bulletSpeed: 500
+  bulletSpeed: 100
   isFiring: 0
   moveDirection: {x: 0, y: 0}
   shipFront: {fileID: 400004}
@@ -274,7 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shieldType: 0
-  shieldStrength: 0
+  shieldStrength: 100
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1

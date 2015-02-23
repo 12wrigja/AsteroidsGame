@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-	public float acceleration;
+	public float maxSpeed;
 	public float rotationalForce;
 	public float fireRate;
 	public float bulletSpeed;
@@ -43,7 +43,8 @@ public class Player : MonoBehaviour {
 		
 		if (Input.GetAxis("Vertical") > 0)
 		{
-			rigidbody2D.AddForce(moveDirection * acceleration * Time.deltaTime);
+            float input = Input.GetAxis("Vertical");
+			rigidbody2D.AddForce(moveDirection * maxSpeed * input);
 		}
 
 		// Do regain control of the ship this will briefly halt all physics effect
@@ -55,12 +56,12 @@ public class Player : MonoBehaviour {
 		
 		if (Input.GetKey(KeyCode.D))
 		{
-			rigidbody2D.AddTorque(-rotationalForce);
+			rigidbody2D.AddTorque(-rotationalForce, ForceMode2D.Impulse);
 		}
 		
 		else if (Input.GetKey(KeyCode.A))
 		{
-			rigidbody2D.AddTorque(rotationalForce);
+			rigidbody2D.AddTorque(rotationalForce,ForceMode2D.Impulse);
 		}
 	}
 
