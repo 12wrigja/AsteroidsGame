@@ -5,4 +5,8 @@ public class BulletScript : MonoBehaviour {
 
     public float damage;
 
+    void OnCollision2DEnter()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -50,6 +50,10 @@ public class EnemyScript : MonoBehaviour {
                 }
             }
         }
+        if (currentHealth < 0)
+        {
+            Destroy(gameObject);
+        }
 	}
 
     void ShowHealthBar()
@@ -140,11 +144,13 @@ public class EnemyScript : MonoBehaviour {
         isFiring = false;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("PlayerBullet"))
         {
-            Debug.Log("Enemy has been hit!");
+            Debug.Log("damanging an enemy");
+            BulletScript bullet = collision.gameObject.GetComponent<BulletScript>();
+            currentHealth -= bullet.damage;
         }
     }
 }
