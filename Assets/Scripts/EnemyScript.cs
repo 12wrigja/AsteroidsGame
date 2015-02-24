@@ -63,12 +63,15 @@ public class EnemyScript : MonoBehaviour {
         if (Vector3.Angle(forwardVector, transform.up) < 15)
         {
             Debug.DrawLine(this.transform.position, this.transform.position + forwardVector, Color.red);
-            this.rigidbody2D.velocity = forwardVector;
+            rigidbody2D.AddForce(forwardVector);
         }
         float angle = (Mathf.Atan2(movementVector.y, movementVector.x) * Mathf.Rad2Deg + 270) % 360;
-        float rotateForce = ((angle > 180) ? (-1 * (angle - 180)) : angle) * rotationalForce / 180;
-        this.rigidbody2D.AddTorque(rotateForce);
+        float absDifference = Mathf.Abs(angle-rigidbody2D.rotation);
+        float deltaAngle = Mathf.Min((angle-rigidbody2D.rotation)*rotationalForce*Time.fixedDeltaTime,Mathf.Sign(angle-rigidbody2D.rotation)*rotationalForce*2);
+        Debug.Log(deltaAngle);
+        rigidbody2D.MoveRotation(rigidbody2D.rotation+deltaAngle);
     }
+
     Vector2 truncate(Vector2 vector, float MaximumMagnitude)
     {
         if (vector.magnitude > MaximumMagnitude)
