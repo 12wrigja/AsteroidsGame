@@ -7,10 +7,17 @@ public class EnemyScript : MonoBehaviour {
     public float rotationalForce;
     public float health;
     public float bulletDamage;
-    public float rateOfFire;
+    public float bulletSpeed;
+    public float fireWait;
     public float detectionDistance;
 
     public GameObject target;
+
+    public bool isFiring;
+    public Transform laserLeft;
+    public Transform laserRight;
+
+    public GameObject bulletPrefab;
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +25,11 @@ public class EnemyScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        float attackAngle = Vector3.Angle(transform.up, (target.transform.position - transform.position));
+        if (attackAngle < 10 && !isFiring)
+        {
+            FireLaser();
+        }
 	}
 
     void FixedUpdate()
@@ -26,7 +38,6 @@ public class EnemyScript : MonoBehaviour {
         {
             MoveGivenVector(Seek());
         }
-        
     }
 
     bool FindPlayer()
@@ -66,7 +77,8 @@ public class EnemyScript : MonoBehaviour {
                 angle += 360;
             }
             Debug.Log(angle);
-            rigidbody2D.AddTorque(rotationalForce * angle / 180);
+            float deltaAngle = angle * rotationalForce * Time.deltaTime;
+            rigidbody2D.MoveRotation(rigidbody2D.rotation + deltaAngle);
     }
 
     Vector2 truncate(Vector2 vector, float MaximumMagnitude)
@@ -76,5 +88,26 @@ public class EnemyScript : MonoBehaviour {
             return vector.normalized * MaximumMagnitude;
         }
         return vector;
+    }
+
+    private void FireLaser()
+    {
+        isFiring = true;
+        StartCoroutine(Fire());
+    }
+
+    // Fires the enemy ship's lasers.
+    private IEnumerator Fire()
+    {
+        GameObject bulletLeftInstance = Instantiate(bulletPrefab, laserLeft.position, laserLeft.rotation) as GameObject;
+        GameObject bulletRightInstance = Instantiate(bulletPrefab, laserRight.position, laserRight.rotation) as GameObject;
+
+        audio.Play();
+        bulletLeftInstance.rigidbody2D.AddForce(transform.up * bulletSpeed * Time.deltaTime);
+        bulletRightInstance.rigidbody2D.AddForce(transform.up * bulletSpeed * Time.deltaTime);
+
+        yield return new WaitForSeconds(fireWait);
+        Debug.Log("Resetting Enemy Guns");
+        isFiring = false;
     }
 }
