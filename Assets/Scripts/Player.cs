@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
 	public float maxSpeed;
 	public float rotationalForce;
 	public float fireRate;
-	public float bulletSpeed;
+	public float bulletDamage;
 
 	public bool isFiring;
 
@@ -71,9 +72,14 @@ public class Player : MonoBehaviour {
 		GameObject bulletLeftInstance = Instantiate(bulletPrefab, laserLeft.position, laserLeft.rotation) as GameObject;
 		GameObject bulletRightInstance = Instantiate(bulletPrefab, laserRight.position, laserRight.rotation) as GameObject;
 
+        BulletScript temp = bulletLeftInstance.AddComponent<BulletScript>();
+        temp.damage = bulletDamage;
+        temp = bulletRightInstance.AddComponent<BulletScript>();
+        temp.damage = bulletDamage;
+
 		audio.Play();
-		bulletLeftInstance.rigidbody2D.AddForce(moveDirection * bulletSpeed * Time.deltaTime);
-		bulletRightInstance.rigidbody2D.AddForce(moveDirection * bulletSpeed * Time.deltaTime);
+		bulletLeftInstance.rigidbody2D.AddForce(moveDirection * 100 * Time.deltaTime);
+		bulletRightInstance.rigidbody2D.AddForce(moveDirection * 100 * Time.deltaTime);
 
 		yield return new WaitForSeconds(fireRate);
 		isFiring = false;

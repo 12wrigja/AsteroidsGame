@@ -1,17 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class EnemyScript : MonoBehaviour {
 
     public float maxSpeed;
     public float rotationalForce;
-    public float health;
+    public float maxHealth;
+    public float currentHealth;
     public float bulletDamage;
-    public float bulletSpeed;
     public float fireWait;
     public float detectionDistance;
 
     public GameObject target;
+    public ShieldBehavior shield;
+    public Slider healthBar;
+    public Transform healthBarPosition;
 
     public bool isFiring;
     public Transform laserLeft;
@@ -21,16 +25,38 @@ public class EnemyScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        //healthBar.minValue = 0;
+        //healthBar.maxValue = (maxHealth + shield.maxShieldStrength);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        float attackAngle = Vector3.Angle(transform.up, (target.transform.position - transform.position));
-        if (attackAngle < 10 && !isFiring)
+        if (target != null)
         {
-            FireLaser();
+            float attackAngle = Vector3.Angle(transform.up, (target.transform.position - transform.position));
+            if (attackAngle < 10 && !isFiring)
+            {
+                //FireLaser();
+            }
+        }
+        for (int i = 0; i < AsteroidFactory.activeAsteroids.Count; i++)
+        {
+            if (AsteroidFactory.activeAsteroids[i] != null)
+            {
+                float attackAngle = Vector3.Angle(transform.up, (AsteroidFactory.activeAsteroids[i].transform.position - transform.position));
+                if (attackAngle < 10 && !isFiring)
+                {
+                    FireLaser();
+                }
+            }
         }
 	}
+
+    void ShowHealthBar()
+    {
+        healthBar.GetComponent<RectTransform>().anchoredPosition3D = healthBarPosition.position;
+        healthBar.value = (currentHealth + shield.shieldStrength);
+    }
 
     void FixedUpdate()
     {
@@ -76,7 +102,6 @@ public class EnemyScript : MonoBehaviour {
             {
                 angle += 360;
             }
-            Debug.Log(angle);
             float deltaAngle = angle * rotationalForce * Time.deltaTime;
             rigidbody2D.MoveRotation(rigidbody2D.rotation + deltaAngle);
     }
@@ -102,12 +127,24 @@ public class EnemyScript : MonoBehaviour {
         GameObject bulletLeftInstance = Instantiate(bulletPrefab, laserLeft.position, laserLeft.rotation) as GameObject;
         GameObject bulletRightInstance = Instantiate(bulletPrefab, laserRight.position, laserRight.rotation) as GameObject;
 
+        BulletScript temp = bulletLeftInstance.AddComponent<BulletScript>();
+        temp.damage = bulletDamage;
+        temp = bulletRightInstance.AddComponent<BulletScript>();
+        temp.damage = bulletDamage;
+
         audio.Play();
-        bulletLeftInstance.rigidbody2D.AddForce(transform.up * bulletSpeed * Time.deltaTime);
-        bulletRightInstance.rigidbody2D.AddForce(transform.up * bulletSpeed * Time.deltaTime);
+        bulletLeftInstance.rigidbody2D.AddForce(transform.up * 100 * Time.deltaTime);
+        bulletRightInstance.rigidbody2D.AddForce(transform.up * 100 * Time.deltaTime);
 
         yield return new WaitForSeconds(fireWait);
-        Debug.Log("Resetting Enemy Guns");
         isFiring = false;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("PlayerBullet"))
+        {
+            Debug.Log("Enemy has been hit!");
+        }
     }
 }

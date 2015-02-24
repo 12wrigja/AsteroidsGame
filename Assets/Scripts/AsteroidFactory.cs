@@ -8,7 +8,7 @@ public class AsteroidFactory : MonoBehaviour {
 	public int asteroidsToSpawn;
 	public Transform[] spawnNodes;
 
-	public List<GameObject> activeAsteroids;
+	public static List<GameObject> activeAsteroids = new List<GameObject>();
 
 	// Use this for initialization
 	void Start () 
@@ -23,15 +23,25 @@ public class AsteroidFactory : MonoBehaviour {
 
 		for (int i = 0; i < spawnNodes.Length; i++)
 		{
-			activeAsteroids.Add(Instantiate(asteroidPrefab, spawnNodes[i].position, Quaternion.identity) as GameObject);
-			activeAsteroids[i].rigidbody2D.AddForce(new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)) * Random.Range(1000f, 2000f));
-			activeAsteroids[i].rigidbody2D.AddTorque(Random.Range(100f, 500f));
+            SpawnAsteroid(spawnNodes[i].position);
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-	
+        activeAsteroids.RemoveAll(item => item == null);
+        if (activeAsteroids.Count < asteroidsToSpawn)
+        {
+            SpawnAsteroid(spawnNodes[Random.Range(0, spawnNodes.Length)].position);
+        }
 	}
+
+    void SpawnAsteroid(Vector3 position)
+    {
+        GameObject asteroid = Instantiate(asteroidPrefab, position, Quaternion.identity) as GameObject;
+        activeAsteroids.Add(asteroid);
+        asteroid.rigidbody2D.AddForce(new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)) * Random.Range(1000f, 2000f));
+        asteroid.rigidbody2D.AddTorque(Random.Range(100f, 500f));
+    }
 }
