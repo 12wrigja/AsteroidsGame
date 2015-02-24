@@ -10,9 +10,7 @@ public class EnemyScript : MonoBehaviour {
     public float rateOfFire;
     public float detectionDistance;
 
-    //public Transform target;
-
-    private Vector2 targetLocation;
+    public GameObject target;
 
 	// Use this for initialization
 	void Start () {
@@ -24,34 +22,31 @@ public class EnemyScript : MonoBehaviour {
 
     void FixedUpdate()
     {
-        Debug.DrawLine(this.transform.position, this.transform.position + new Vector3(rigidbody2D.velocity.x, rigidbody2D.velocity.y, 0), Color.green);
-        Vector2 point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        targetLocation = point;
-        //if (FindPlayer())
-        //{
-        //    MoveGivenVector(Seek());
-        //}
-        MoveGivenVector(Seek());
+        if (target != null)
+        {
+            MoveGivenVector(Seek());
+        }
+        
     }
 
     bool FindPlayer()
     {
-        float distance = (targetLocation - (Vector2)transform.position).magnitude;
+        float distance = (target.transform.position - transform.position).magnitude;
         return distance <= detectionDistance;
     }
 
     Vector2 Seek()
     {
-        Vector2 desired_velocity = (targetLocation - (Vector2)transform.position).normalized * maxSpeed;
+        Vector2 desired_velocity = (target.transform.position - transform.position).normalized * maxSpeed;
         Vector2 steering = truncate(desired_velocity - rigidbody2D.velocity,maxSpeed);
-        Debug.DrawLine(this.transform.position, targetLocation, Color.green);
+        Debug.DrawLine(this.transform.position, target.transform.position, Color.green);
         Debug.DrawLine(transform.position, transform.position + new Vector3(steering.x,steering.y), Color.blue);
         return steering;
     }
 
     Vector2 Flee()
     {
-        Vector2 desired_velocity = ((Vector2)transform.position - targetLocation).normalized * maxSpeed;
+        Vector2 desired_velocity = (transform.position - target.transform.position).normalized * maxSpeed;
         Vector2 steering = desired_velocity - rigidbody2D.velocity;
         return steering;
     }
@@ -65,12 +60,13 @@ public class EnemyScript : MonoBehaviour {
             Debug.DrawLine(this.transform.position, this.transform.position + forwardVector, Color.red);
             rigidbody2D.AddForce(forwardVector);
         }
-        float angle = (Mathf.Atan2(movementVector.y, movementVector.x) * Mathf.Rad2Deg + 270) % 360;
-        float angle2 = Vector3.Angle(movementVector, transform.up);
-        float totalDelta = angle2 * ((angle > 180) ? -1 : 1);
-        float deltaAngle = totalDelta*rotationalForce*Time.fixedDeltaTime;
-        float movementAngle = Mathf.Min(Mathf.Abs(deltaAngle),rotationalForce) * Mathf.Sign(deltaAngle);
-        rigidbody2D.MoveRotation(rigidbody2D.rotation+movementAngle);
+            float angle = (Mathf.Atan2(movementVector.y, movementVector.x) * Mathf.Rad2Deg + 270) % 360 - rigidbody2D.rotation;
+            if (angle < -180)
+            {
+                angle += 360;
+            }
+            Debug.Log(angle);
+            rigidbody2D.AddTorque(rotationalForce * angle / 180);
     }
 
     Vector2 truncate(Vector2 vector, float MaximumMagnitude)

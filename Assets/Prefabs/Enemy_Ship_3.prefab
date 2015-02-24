@@ -68,12 +68,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e324080b94d3224e96b9d8b34290f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 4
-  rotationalForce: 10
+  maxSpeed: 10
+  rotationalForce: 5
   health: 100
   bulletDamage: 10
-  rateOfFire: 3
-  detectionDistance: 50
+  rateOfFire: 1
+  detectionDistance: 100
   target: {fileID: 0}
 --- !u!212 &21298026
 SpriteRenderer:
