@@ -391,7 +391,6 @@ MonoBehaviour:
   bulletDamage: 10
   rateOfFire: 3
   detectionDistance: 0
-  target: {fileID: 117123409}
 --- !u!1 &293951206
 GameObject:
   m_ObjectHideFlags: 0
@@ -933,6 +932,30 @@ Prefab:
       propertyPath: target
       value: 
       objectReference: {fileID: 117123409}
+    - target: {fileID: 11485104, guid: 1646e7180de32d94097500eba51d9f85, type: 2}
+      propertyPath: maxSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11485104, guid: 1646e7180de32d94097500eba51d9f85, type: 2}
+      propertyPath: rotationalForce
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11485104, guid: 1646e7180de32d94097500eba51d9f85, type: 2}
+      propertyPath: health
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 11485104, guid: 1646e7180de32d94097500eba51d9f85, type: 2}
+      propertyPath: bulletDamage
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 11485104, guid: 1646e7180de32d94097500eba51d9f85, type: 2}
+      propertyPath: rateOfFire
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11485104, guid: 1646e7180de32d94097500eba51d9f85, type: 2}
+      propertyPath: detectionDistance
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1646e7180de32d94097500eba51d9f85, type: 2}
   m_RootGameObject: {fileID: 1856648077}
@@ -953,7 +976,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1559071475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1171,7 +1194,6 @@ MonoBehaviour:
   bulletDamage: 10
   rateOfFire: 3
   detectionDistance: 0
-  target: {fileID: 117123409}
 --- !u!1 &1660994827
 GameObject:
   m_ObjectHideFlags: 0
@@ -1356,13 +1378,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e324080b94d3224e96b9d8b34290f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 4
-  rotationalForce: 10
+  maxSpeed: 5
+  rotationalForce: 4
   health: 100
   bulletDamage: 10
-  rateOfFire: 3
-  detectionDistance: 50
-  target: {fileID: 117123409}
+  rateOfFire: 1
+  detectionDistance: 100
 --- !u!1 &1907876313
 GameObject:
   m_ObjectHideFlags: 0
