@@ -66,10 +66,11 @@ public class EnemyScript : MonoBehaviour {
             rigidbody2D.AddForce(forwardVector);
         }
         float angle = (Mathf.Atan2(movementVector.y, movementVector.x) * Mathf.Rad2Deg + 270) % 360;
-        float absDifference = Mathf.Abs(angle-rigidbody2D.rotation);
-        float deltaAngle = Mathf.Min((angle-rigidbody2D.rotation)*rotationalForce*Time.fixedDeltaTime,Mathf.Sign(angle-rigidbody2D.rotation)*rotationalForce*2);
-        Debug.Log(deltaAngle);
-        rigidbody2D.MoveRotation(rigidbody2D.rotation+deltaAngle);
+        float angle2 = Vector3.Angle(movementVector, transform.up);
+        float totalDelta = angle2 * ((angle > 180) ? -1 : 1);
+        float deltaAngle = totalDelta*rotationalForce*Time.fixedDeltaTime;
+        float movementAngle = Mathf.Min(Mathf.Abs(deltaAngle),rotationalForce) * Mathf.Sign(deltaAngle);
+        rigidbody2D.MoveRotation(rigidbody2D.rotation+movementAngle);
     }
 
     Vector2 truncate(Vector2 vector, float MaximumMagnitude)
