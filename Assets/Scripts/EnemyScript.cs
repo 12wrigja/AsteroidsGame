@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class EnemyScript : MonoBehaviour {
+public class EnemyScript : MonoBehaviour
+{
 
     public float maxSpeed;
     public float rotationalForce;
@@ -14,8 +15,6 @@ public class EnemyScript : MonoBehaviour {
 
     public GameObject target;
     public ShieldBehavior shield;
-    public Slider healthBar;
-    public Transform healthBarPosition;
 
     public bool isFiring;
     public Transform laserLeft;
@@ -23,31 +22,39 @@ public class EnemyScript : MonoBehaviour {
 
     public GameObject bulletPrefab;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         //healthBar.minValue = 0;
         //healthBar.maxValue = (maxHealth + shield.maxShieldStrength);
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update() {
         if (target != null)
         {
-            float attackAngle = Vector3.Angle(transform.up, (target.transform.position - transform.position));
-            if (attackAngle < 10 && !isFiring)
-            {
-                //FireLaser();
-            }
-        }
-        for (int i = 0; i < AsteroidFactory.activeAsteroids.Count; i++)
-        {
-            if (AsteroidFactory.activeAsteroids[i] != null)
-            {
-                float attackAngle = Vector3.Angle(transform.up, (AsteroidFactory.activeAsteroids[i].transform.position - transform.position));
-                if (attackAngle < 10 && !isFiring)
+            bool shouldFire = false;
+            float playerAttackAngle = Vector3.Angle(transform.up, (target.transform.position - transform.position));
+            float distance = (target.transform.position - transform.position).magnitude;
+            if(playerAttackAngle < 10 &&  distance <= detectionDistance){
+                shouldFire = true;
+            } else {
+                for (int i = 0; i < AsteroidFactory.activeAsteroids.Count; i++)
                 {
-                    FireLaser();
+                    if (AsteroidFactory.activeAsteroids[i] != null)
+                    {
+                        float attackAngle = Vector3.Angle(transform.up, (AsteroidFactory.activeAsteroids[i].transform.position - transform.position));
+                        float astDistance = (AsteroidFactory.activeAsteroids[i].transform.position - transform.position).magnitude;
+                        if (attackAngle < 10 && astDistance < detectionDistance) {
+                            shouldFire = true;
+                        }
+                    }
                 }
+            }
+
+            if (shouldFire && !isFiring)
+            {
+                FireLaser();
             }
         }
         if (currentHealth < 0)
@@ -55,12 +62,6 @@ public class EnemyScript : MonoBehaviour {
             Destroy(gameObject);
         }
 	}
-
-    void ShowHealthBar()
-    {
-        healthBar.GetComponent<RectTransform>().anchoredPosition3D = healthBarPosition.position;
-        healthBar.value = (currentHealth + shield.shieldStrength);
-    }
 
     void FixedUpdate()
     {
@@ -79,9 +80,9 @@ public class EnemyScript : MonoBehaviour {
     Vector2 Seek()
     {
         Vector2 desired_velocity = (target.transform.position - transform.position).normalized * maxSpeed;
-        Vector2 steering = truncate(desired_velocity - rigidbody2D.velocity,maxSpeed);
+        Vector2 steering = truncate(desired_velocity - rigidbody2D.velocity, maxSpeed);
         Debug.DrawLine(this.transform.position, target.transform.position, Color.green);
-        Debug.DrawLine(transform.position, transform.position + new Vector3(steering.x,steering.y), Color.blue);
+        Debug.DrawLine(transform.position, transform.position + new Vector3(steering.x, steering.y), Color.blue);
         return steering;
     }
 
@@ -101,13 +102,13 @@ public class EnemyScript : MonoBehaviour {
             Debug.DrawLine(this.transform.position, this.transform.position + forwardVector, Color.red);
             rigidbody2D.AddForce(forwardVector);
         }
-            float angle = (Mathf.Atan2(movementVector.y, movementVector.x) * Mathf.Rad2Deg + 270) % 360 - rigidbody2D.rotation;
-            if (angle < -180)
-            {
-                angle += 360;
-            }
-            float deltaAngle = angle * rotationalForce * Time.deltaTime;
-            rigidbody2D.MoveRotation(rigidbody2D.rotation + deltaAngle);
+        float angle = (Mathf.Atan2(movementVector.y, movementVector.x) * Mathf.Rad2Deg + 270) % 360 - rigidbody2D.rotation;
+        if (angle < -180)
+        {
+            angle += 360;
+        }
+        float deltaAngle = angle * rotationalForce * Time.deltaTime;
+        rigidbody2D.MoveRotation(rigidbody2D.rotation + deltaAngle);
     }
 
     Vector2 truncate(Vector2 vector, float MaximumMagnitude)
@@ -151,6 +152,7 @@ public class EnemyScript : MonoBehaviour {
             Debug.Log("damanging an enemy");
             BulletScript bullet = collision.gameObject.GetComponent<BulletScript>();
             currentHealth -= bullet.damage;
+            Debug.Log(currentHealth);
         }
     }
 }
